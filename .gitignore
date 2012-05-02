@@ -40,5 +40,8 @@ doc/
 # RubyMine
 .idea
 
+.rspec
+db/schema.rb
+
 # Environment variables
 /config/heroku_env.rb
