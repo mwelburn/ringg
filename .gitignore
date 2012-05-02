@@ -39,3 +39,6 @@ doc/
 
 # RubyMine
 .idea
+
+# Environment variables
+/config/heroku_env.rb
