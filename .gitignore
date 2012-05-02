@@ -41,7 +41,7 @@ doc/
 .idea
 
 .rspec
-db/schema.rb
+/db/schema.rb
 
 # Environment variables
 /config/heroku_env.rb
