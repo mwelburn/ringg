@@ -5,14 +5,14 @@ gem 'rails', '3.2.3'
 # Bundle edge Rails instead:
 # gem 'rails', :git => 'git://github.com/rails/rails.git'
 
-gem 'sqlite3'
-
-
 # Gems used only for assets and not required
 # in production environments by default.
 group :assets do
   gem 'sass-rails',   '~> 3.2.3'
   gem 'coffee-rails', '~> 3.2.1'
+
+  # gem 'sass-rails', '~> 3.1'
+  gem 'bootstrap-sass', '~> 2.0.2'
 
   # See https://github.com/sstephenson/execjs#readme for more supported runtimes
   # gem 'therubyracer', :platform => :ruby
@@ -36,3 +36,29 @@ gem 'jquery-rails'
 
 # To use debugger
 # gem 'ruby-debug19', :require => 'ruby-debug'
+
+gem 'devise'
+gem 'omniauth-facebook'
+gem 'omniauth-twitter'
+
+group :development do
+  gem 'sqlite3'
+  gem 'debugger'
+
+  gem 'rspec-rails'
+  gem 'faker'
+end
+
+group :test do
+  # Pretty printed test output
+  gem 'turn', :require => false
+
+  gem 'rspec'
+  gem 'webrat'
+  gem 'factory_girl_rails'
+end
+
+group :production do
+  gem 'heroku'
+  gem 'pg'
+end
