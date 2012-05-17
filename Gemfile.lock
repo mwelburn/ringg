@@ -90,6 +90,7 @@ GEM
     mime-types (1.18)
     multi_json (1.3.2)
     multipart-post (1.1.4)
+    mustache (0.99.4)
     nokogiri (1.5.0)
     oauth (0.4.6)
     oauth2 (0.5.2)
@@ -190,10 +191,11 @@ DEPENDENCIES
   coffee-rails (~> 3.2.1)
   debugger
   devise
-  factory_girl_rails
+  factory_girl_rails (~> 3.0)
   faker
   heroku
   jquery-rails
+  mustache
   omniauth-facebook
   omniauth-twitter
   pg

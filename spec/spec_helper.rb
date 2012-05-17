@@ -32,6 +32,7 @@ RSpec.configure do |config|
   config.infer_base_class_for_anonymous_controllers = false
 
   config.include Devise::TestHelpers, :type => :controller
+  config.include FactoryGirl::Syntax::Methods
 
   def test_sign_in(user)
     controller.sign_in user
@@ -39,8 +40,7 @@ RSpec.configure do |config|
 
   def integration_sign_in(user)
     visit new_user_session_path
-    fill_in :email, :with => user.email
-    fill_in :username, :with => user.username
+    fill_in :login, :with => user.email
     fill_in :password, :with => user.password
     click_button
   end

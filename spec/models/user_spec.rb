@@ -118,4 +118,81 @@ describe User do
       User.all.should == [user2, user1, user3]
     end
   end
+
+  describe "finger associations" do
+
+    describe "should auto generate fingers upon user creation" do
+
+      before(:each) do
+        @user = User.create!(@attr)
+      end
+
+      it "should have fingers relationship" do
+        @user.should respond_to(:fingers)
+      end
+    end
+
+    describe "should not auto generate fingers if flag set" do
+
+      it "should not create fingers if valid flag" do
+        valid_flag = 1
+        user = User.new(@attr)
+        user.no_fingers = valid_flag
+        user.save!
+        user.fingers.size == 0
+      end
+
+      it "should create fingers if invalid flag" do
+        invalid_flags = %w(0 true false &)
+        invalid_flags.each do |invalid_flag|
+          user = User.new(@attr.merge( {:email => generate(:email), :username => generate(:username)} ))
+          user.no_fingers = invalid_flag
+          user.save!
+          user.fingers.size == 10
+        end
+      end
+
+      it "should create fingers if no flag set" do
+        user = User.create!(@attr)
+        user.fingers.size == 10
+      end
+
+      describe "finger creation" do
+
+        before(:each) do
+          @user = User.new(@attr)
+          @user.no_fingers = 1
+          @user.save!
+        end
+
+        it "should allow finger creation later" do
+          @finger1 = create(:finger, :user => @user, :side => 0, :digit => 0)
+          @finger2 = create(:finger, :user => @user, :side => 1, :digit => 0)
+          @finger3 = create(:finger, :user => @user, :side => 0, :digit => 1)
+          @finger4 = create(:finger, :user => @user, :side => 1, :digit => 1)
+          @finger5 = create(:finger, :user => @user, :side => 0, :digit => 2)
+          @finger6 = create(:finger, :user => @user, :side => 1, :digit => 2)
+          @finger7 = create(:finger, :user => @user, :side => 0, :digit => 3)
+          @finger8 = create(:finger, :user => @user, :side => 1, :digit => 3)
+          @finger9 = create(:finger, :user => @user, :side => 0, :digit => 4)
+          @finger10 = create(:finger, :user => @user, :side => 1, :digit => 4)
+          @user.fingers.size == 10
+        end
+
+        it "should have fingers the order of left to right, then thumb to pinky" do
+          @finger1 = create(:finger, :user => @user, :side => 0, :digit => 0)
+          @finger2 = create(:finger, :user => @user, :side => 1, :digit => 0)
+          @finger3 = create(:finger, :user => @user, :side => 0, :digit => 1)
+          @finger4 = create(:finger, :user => @user, :side => 1, :digit => 1)
+          @finger5 = create(:finger, :user => @user, :side => 0, :digit => 2)
+          @finger6 = create(:finger, :user => @user, :side => 1, :digit => 2)
+          @finger7 = create(:finger, :user => @user, :side => 0, :digit => 3)
+          @finger8 = create(:finger, :user => @user, :side => 1, :digit => 3)
+          @finger9 = create(:finger, :user => @user, :side => 0, :digit => 4)
+          @finger10 = create(:finger, :user => @user, :side => 1, :digit => 4)
+          @user.fingers.should == [@finger1, @finger3, @finger5, @finger7, @finger9, @finger2, @finger4, @finger6, @finger8, @finger10]
+        end
+      end
+    end
+  end
 end

@@ -5,7 +5,24 @@ Ring::Application.routes.draw do
     get '/users/auth/:provider' => 'users/omniauth_callbacks#passthru'
   end
 
-  root :to => 'home#index'
+  #match '/users/:id' => 'users#show', :as => :show
+  resources :users, :only => [ :index, :show ] do
+
+    member do
+      get 'fingers'
+    end
+  end
+  resources :fingers, :only => [ :index, :show, :update ]
+
+#  match '/about', :to => 'pages#about'
+#  match '/contact', :to => 'pages#contact'
+#  match '/help', :to => 'pages#help'
+
+  root :to => 'pages#index'
+
+  match '/error', :to => 'pages#error', :as => 'error'
+  #handling people who give us invalid routes
+  match '*a', :to => 'pages#error'
 
   # The priority is based upon order of creation:
   # first created -> highest priority.

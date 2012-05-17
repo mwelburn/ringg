@@ -11,6 +11,7 @@
 /db/*.sqlite3
 
 # Ignore all logfiles and tempfiles.
+/*.log
 /log/*.log
 /tmp
 
@@ -42,6 +43,7 @@ doc/
 
 .rspec
 /db/schema.rb
+/spec/webrat.log
 
 # Environment variables
 /config/heroku_env.rb
