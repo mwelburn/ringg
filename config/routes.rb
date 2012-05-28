@@ -7,9 +7,9 @@ Ring::Application.routes.draw do
 
   #match '/users/:id' => 'users#show', :as => :show
   resources :users, :only => [ :index, :show ] do
-
     member do
       get 'fingers'
+      post 'fingers' => 'users#update_fingers'
     end
   end
   resources :fingers, :only => [ :index, :show, :update ]

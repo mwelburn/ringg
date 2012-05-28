@@ -77,6 +77,10 @@ class User < ActiveRecord::Base
     end
   end
 
+  def as_json(options={})
+    super(:only => [:id, :username, :name, :email])
+  end
+
   private
     def create_fingers
       if self.no_fingers != 1

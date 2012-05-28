@@ -18,3 +18,9 @@
 .facebook-login:active {
     background: url('facebook_signin.png') no-repeat bottom;
 }
+
+.finger-edit {
+  &:hover {
+    cursor: pointer
+  }
+}

@@ -6,7 +6,10 @@ class Finger < ActiveRecord::Base
   validate :validate_ring_size
 
   validates :user_id, :presence => true
-
+=begin
+  0 = left
+  1 = right
+=end
   validates :side, :presence => true,
                    :numericality => {
                       :only_integer => true,
@@ -50,6 +53,10 @@ class Finger < ActiveRecord::Base
 
   def self.SIDES
     [0, 1]
+  end
+
+  def as_json(options={})
+    super(:only => [:id, :side, :digit, :size, :comment, :user_id])
   end
 
   private

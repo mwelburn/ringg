@@ -1,9 +1,10 @@
 class UsersController < ApplicationController
   before_filter :authenticate_user!
+  before_filter :load_user, :only => [ :show, :fingers ]
 
   def index
     @title = "All users"
-    #TODO - need to paginate this based on params if available
+    #TODO - need to paginate this based on params if available...or scrolling
     @users = User.all
 
     respond_to do |format|
@@ -13,27 +14,60 @@ class UsersController < ApplicationController
   end
 
   def show
-    @user = User.find(params[:id])
-
+    @fingers = @user.fingers.all
     respond_to do |format|
       format.html
-      format.json { render :json => @user }
+      format.json { render :json => { :user => @user, :fingers => @fingers } }
     end
-    #TODO - show error message if it doesn't exist
   end
 
+  #TODO - implement later
   def create
     #TODO - accept params, create a user, return success/error message - use devise?
     #@user = User.new(params[:user])
   end
 
   def fingers
-    user = User.find(params[:id])
-    @fingers = user.fingers.all
-    #TODO - error if it doesn't exist
+    @fingers = @user.fingers.all
     respond_to do |format|
-      format.html
+      format.html { redirect_to @user}
       format.json { render :json => @fingers }
     end
   end
+
+  def update_fingers
+    fingers = params[:fingers]
+    begin
+      fingers.each do |finger|
+        #TODO - use CanCan for this later
+        if (finger.user_id == current_user.id)
+          begin
+            myfinger = current_user.fingers.find(finger.id)
+          rescue
+            format.json { render :json => { :errors => "Finger does not exist for user"}, :status => 422 }
+          end
+
+          myfinger.size = finger.size
+          myfinger.comment = finger.comment
+          myfinger.save
+        end
+      end
+    rescue ActiveRecord::RecordInvalid => invalid
+      format.json { render :json => { :errors => "Finger cannot be updated: #{invalid}"}}
+    end
+
+    render :json => { :fingers => @user.fingers }
+  end
+
+  private
+    def load_user
+      begin
+        @user = User.find(params[:id])
+      rescue
+        respond_to do |format|
+          format.html { redirect_to error_path, :flash => { :failure => "User does not exist"} }
+          format.json { render :json => { :errors => "User does not exist"}, :status => 422 }
+        end
+      end
+    end
 end
