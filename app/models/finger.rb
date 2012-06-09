@@ -36,8 +36,7 @@ class Finger < ActiveRecord::Base
                        :message => "must be a number between 0 and 4"
                     }
 
-  # -1 denotes blank
-  validates :size, :presence => true,
+  validates :size, :presence => false,
                    :numericality => {
                       :greater_than_or_equal_to => 0,
                       :less_than_or_equal_to => 16,
@@ -61,9 +60,9 @@ class Finger < ActiveRecord::Base
 
   private
     def validate_ring_size
-      if size.blank?
-        errors.add(:size, "must be set")
-      elsif size % 0.25 != 0
+      if size == -1
+        #do nothing -- signifies blank
+      elsif !size.blank? and size % 0.25 != 0
         errors.add(:size, "must be divisible by .25")
       end
     end

@@ -1,7 +1,11 @@
 class PagesController < ApplicationController
 
   def index
-    @title = "Keep track of your ring sizes"
+    if user_signed_in?
+      redirect_to current_user
+    else
+      @title = "Keep track of your ring sizes"
+    end
   end
 
   def contact

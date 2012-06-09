@@ -1,6 +1,10 @@
 @import "bootstrap";
 @import "bootstrap-responsive";
 
+.container {
+
+}
+
 .footer {
   margin-top: 45px;
   padding: 20px 20px 20px;
@@ -19,8 +23,55 @@
     background: url('facebook_signin.png') no-repeat bottom;
 }
 
+.book {
+  width: 940px;
+  overflow-x: hidden;
+  margin: 0 auto;
+}
+
 .finger-edit {
   &:hover {
     cursor: pointer
   }
+}
+
+@mixin finger {
+  background: url("finger1.png");
+  position: relative;
+  height: 50px;
+  width: 200px;
+}
+
+@mixin flip-horizontal {
+  -moz-transform: scaleX(-1);
+  -webkit-transform: scaleX(-1);
+  -o-transform: scaleX(-1);
+  transform: scaleX(-1);
+  -ms-filter: fliph; /*IE*/
+  filter: fliph; /*IE*/
+}
+
+.finger-left {
+  @include finger;
+
+  left: -125px;
+  float: left;
+}
+
+.finger-right {
+  @include finger;
+  @include flip-horizontal;
+
+  right: -125px;
+  float: right;
+}
+
+.clear {
+  clear: both;
+  height: 0;
+  overflow: hidden;
+}
+
+.finger-set {
+  background: url("finger2.png");
 }

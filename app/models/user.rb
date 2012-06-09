@@ -36,9 +36,15 @@ class User < ActiveRecord::Base
       user
     else # Create a user with a stub password.
       #TODO - make sure to handle username not existing (does it exist in the data?)
-      user = User.build(:email => data.email, :name => data.name, :username => data.username, :password => Devise.friendly_token[0,20])
+      user = User.new(:email => data.email, :name => data.name, :username => data.username, :password => Devise.friendly_token[0,20])
       user.facebook_id = data.id
-      user.save!
+      begin
+        user.save!
+        #TODO - handle return of false..when would that happen
+      rescue
+        #TODO - redirect to 500 page
+      end
+      user
     end
   end
 
@@ -49,9 +55,15 @@ class User < ActiveRecord::Base
     else # Create a user with a stub password.
       logger.debug data
       #need to have a followup page that asks for an email?
-      user = User.build(:email => data.email, :name => data.name, :username => data.screen_name, :password => Devise.friendly_token[0,20])
+      user = User.new(:email => data.email, :name => data.name, :username => data.screen_name, :password => Devise.friendly_token[0,20])
       user.twitter_id = data.id
-      user.save!
+      begin
+        user.save!
+        #TODO - handle return of false..when would that happen
+      rescue
+        #TODO - redirect to 500 page
+      end
+      user
     end
   end
 

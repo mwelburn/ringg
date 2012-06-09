@@ -11,12 +11,10 @@
     <span data-bind="text: displaySide"></span>
     <span data-bind="text: displayDigit"></span>
 
-    <select data-bind="value: size, options: availableSizes, optionsValue: 'value', optionsText: 'display'"/>
-    <textarea rows="3" data-bind="value: comment"></textarea>
+    <select data-bind="value: size, options: $root.availableSizes, optionsValue: 'value', optionsText: 'display'"/>
+    <!--<textarea rows="3" data-bind="value: comment"></textarea>-->
   </li>
 </ul>
-
-<button data-bind="click: save">Save</button>
 
 <script type="text/javascript">
   var Finger = function(data)
@@ -28,7 +26,7 @@
       self.digit = data.digit;
       self.user_id = data.user_id
       self.size = ko.observable(data.size);
-      self.comment = ko.observable(data.comment);
+//      self.comment = ko.observable(data.comment);
 
       self.displaySide = ko.computed(function()
       {
@@ -51,6 +49,39 @@
               return "Pinky";
          }
       });
+
+      self.initial = true;
+      self.size.subscribe(function()
+      {
+          //stop invocation on the initial load
+          if (self.initial)
+          {
+              self.initial = false;
+              return;
+          }
+
+          //if no size value
+          console.log(self.size());
+          if (self.size() == null)
+          {
+            //TODO - figure out if this should blank out the value? i.e. set to -1?
+              return
+          }
+
+          $.ajax("/users/<%= @user.id %>/fingers/" + self.id,
+          {
+              data: ko.toJSON(self),
+              type: "put", contentType: "application/json",
+              success: function(result)
+              {
+                //do nothing?
+              },
+              failure: function(result)
+              {
+                //TODO - resubmit??
+              }
+          });
+      });
   }
 
   var Size = function(value, display) {
@@ -65,7 +96,7 @@
       var self = this;
       self.fingers = ko.observableArray([]);
 
-      availableSizes = [
+      self.availableSizes = [
         new Size(-1, ""),
         new Size(0),
         new Size(0.25),
@@ -142,17 +173,6 @@
         });
         self.fingers(mappedFingers);
       });
-
-      self.save = function()
-      {
-        $.ajax("/users/<%= @user.id %>/fingers",
-        {
-            data: ko.toJSON({ fingers: self.fingers }),
-            type: "post", contentType: "application/json",
-            success: function(result) { console.log(result)},
-            failure: function(result) { console.log(failure)}
-        });
-      };
   }
 
   var ufvm = new UserFingersViewModel();

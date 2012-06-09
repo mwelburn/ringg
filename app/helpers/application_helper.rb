@@ -2,7 +2,7 @@ module ApplicationHelper
   def title
     base_title = "Ringg Me"
     if @title.nil?
-      base_title
+      "#{base_title} | Set your ring sizes
     else
       "#{base_title} | #{@title}"
     end

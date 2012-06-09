@@ -8,11 +8,13 @@ Ring::Application.routes.draw do
   #match '/users/:id' => 'users#show', :as => :show
   resources :users, :only => [ :index, :show ] do
     member do
-      get 'fingers'
-      post 'fingers' => 'users#update_fingers'
+#      get 'fingers'
+#      post 'fingers' => 'users#update_fingers'
     end
+
+    resources :fingers, :only => [ :index, :show, :update ]
   end
-  resources :fingers, :only => [ :index, :show, :update ]
+  #resources :fingers, :only => [ :index, :show, :update ]
 
 #  match '/about', :to => 'pages#about'
 #  match '/contact', :to => 'pages#contact'

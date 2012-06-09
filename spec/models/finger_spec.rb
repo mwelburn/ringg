@@ -129,14 +129,11 @@ describe Finger do
       finger.size == -1
     end
 
-    it "should require a size" do
+    it "should not require a size" do
       finger = @user.fingers.build(@attr)
       finger.side = 1
       finger.digit = 1
-      finger.save!
-
-      finger.size = ""
-      finger.should_not be_valid
+      finger.should be_valid
     end
 
     it "should reject non-numeric size" do
@@ -159,7 +156,14 @@ describe Finger do
       end
     end
 
-    it "should allow a -1 size representing blank" do
+    it "should not accept a blank size" do
+      finger = @user.fingers.build(@attr.merge({ :size => "" }))
+      finger.side = 1
+      finger.digit = 3
+      finger.should_not be_valid
+    end
+    
+    it "should not accept a -1" do
       finger = @user.fingers.build(@attr.merge({ :size => -1 }))
       finger.side = 1
       finger.digit = 3

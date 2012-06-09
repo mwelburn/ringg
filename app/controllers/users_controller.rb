@@ -1,5 +1,5 @@
 class UsersController < ApplicationController
-  before_filter :authenticate_user!
+  before_filter :authenticate_user!, :except => [ :show ]
   before_filter :load_user, :only => [ :show, :fingers ]
 
   def index
@@ -35,6 +35,7 @@ class UsersController < ApplicationController
     end
   end
 
+  #TODO - remove this, unnecessary -- require update one by one
   def update_fingers
     fingers = params[:fingers]
     begin

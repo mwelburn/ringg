@@ -5,7 +5,7 @@ class CreateFingers < ActiveRecord::Migration
       t.integer :digit, :null => false
       t.integer :side, :null => false
       t.decimal :size, :scale => 2, :default => -1, :null => false
-      t.text :comment, :default => ""
+      t.text :comment, :default => "", :null => false
 
       t.timestamps
     end
