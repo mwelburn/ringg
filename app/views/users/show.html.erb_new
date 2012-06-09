@@ -1,0 +1,237 @@
+<div class="book">
+  <p>
+    <%= @user.name %>
+    <br/>
+    <%= @user.username %>
+    <br/>
+    <%= @user.email %>
+  </p>
+
+  <div id="finger-0-0" class="finger-left"></div>
+  <div id="finger-1-0" class="finger-right"></div>
+  <div class="clear"></div>
+  <div id="finger-0-1" class="finger-left"></div>
+  <div id="finger-1-1" class="finger-right"></div>
+  <div class="clear"></div>
+  <div id="finger-0-2" class="finger-left"></div>
+  <div id="finger-1-2" class="finger-right"></div>
+  <div class="clear"></div>
+  <div id="finger-0-3" class="finger-left"></div>
+  <div id="finger-1-3" class="finger-right"></div>
+  <div class="clear"></div>
+  <div id="finger-0-4" class="finger-left"></div>
+  <div id="finger-1-4" class="finger-right"></div>
+  <div class="clear"></div>
+</div>
+
+<script type="text/javascript">
+    $(function()
+    {
+       $(".finger-left").mouseover(function()
+       {
+          $(this).animate(
+          {
+            left: "0px"
+          });
+       });
+
+       $(".finger-right").mouseover(function()
+       {
+          $(this).animate(
+          {
+            right: "0px"
+          });
+       });
+
+       $(".finger-left").click(function()
+       {
+          //stop mouseout from firing -- keep the finger out
+
+          //show window that allows setting size
+
+          //if size set, add "set" class
+
+          //upon closing modal, animate moving finger back
+       });
+
+        $(".finger-right").click(function()
+        {
+           //stop mouseout from firing -- keep the finger out
+
+           //show window that allows setting size
+
+           //if size set, add "set" class
+
+           //upon closing modal, animate moving finger back
+        });
+
+       $(".finger-left").mouseout(function()
+       {
+           $(this).animate(
+           {
+             left: "-125px"
+           });
+       })
+
+        $(".finger-right").mouseout(function()
+        {
+            $(this).animate(
+            {
+              right: "-125px"
+            });
+        })
+    });
+</script>
+
+<ul data-bind="foreach: fingers, visible: fingers().length > 0">
+  <li>
+    <span data-bind="text: displaySide"></span>
+    <span data-bind="text: displayDigit"></span>
+
+    <select data-bind="value: size, options: availableSizes, optionsValue: 'value', optionsText: 'display'"/>
+    <textarea rows="3" data-bind="value: comment"></textarea>
+  </li>
+</ul>
+
+<button data-bind="click: save">Save</button>
+
+<script type="text/javascript">
+  var Finger = function(data)
+  {
+      var self = this;
+
+      self.id = data.id;
+      self.side = data.side;
+      self.digit = data.digit;
+      self.user_id = data.user_id
+      self.size = ko.observable(data.size);
+      self.comment = ko.observable(data.comment);
+
+      self.displaySide = ko.computed(function()
+      {
+          return self.side == 0 ? "Left" : "Right";
+      });
+
+      self.displayDigit = ko.computed(function()
+      {
+         switch(self.digit)
+         {
+            case 0:
+              return "Thumb";
+            case 1:
+              return "Index";
+            case 2:
+              return "Middle";
+            case 3:
+              return "Ring";
+            case 4:
+              return "Pinky";
+         }
+      });
+  }
+
+  var Size = function(value, display) {
+      var self = this;
+
+      self.value = value;
+      self.display = (display == null ? value : display);
+  }
+
+  var UserFingersViewModel = function()
+  {
+      var self = this;
+      self.fingers = ko.observableArray([]);
+
+      availableSizes = [
+        new Size(-1, ""),
+        new Size(0),
+        new Size(0.25),
+        new Size(0.5),
+        new Size(0.75),
+        new Size(1),
+        new Size(1.25),
+        new Size(1.5),
+        new Size(1.75),
+        new Size(2),
+        new Size(2.25),
+        new Size(2.5),
+        new Size(2.75),
+        new Size(3),
+        new Size(3.25),
+        new Size(3.5),
+        new Size(3.75),
+        new Size(4),
+        new Size(4.25),
+        new Size(4.5),
+        new Size(4.75),
+        new Size(5),
+        new Size(5.25),
+        new Size(5.5),
+        new Size(5.75),
+        new Size(6),
+        new Size(6.25),
+        new Size(6.5),
+        new Size(6.75),
+        new Size(7),
+        new Size(7.25),
+        new Size(7.5),
+        new Size(7.75),
+        new Size(8),
+        new Size(8.25),
+        new Size(8.5),
+        new Size(8.75),
+        new Size(9),
+        new Size(9.25),
+        new Size(9.5),
+        new Size(9.75),
+        new Size(10),
+        new Size(10.25),
+        new Size(10.5),
+        new Size(10.75),
+        new Size(11),
+        new Size(11.25),
+        new Size(11.5),
+        new Size(11.75),
+        new Size(12),
+        new Size(12.25),
+        new Size(12.5),
+        new Size(12.75),
+        new Size(13),
+        new Size(13.25),
+        new Size(13.5),
+        new Size(13.75),
+        new Size(14),
+        new Size(14.25),
+        new Size(14.5),
+        new Size(14.75),
+        new Size(15),
+        new Size(15.25),
+        new Size(15.5),
+        new Size(15.75),
+        new Size(16)
+      ];
+
+      $.getJSON("/users/<%= @user.id %>/fingers.json", function(allData)
+      {
+        var mappedFingers = $.map(allData, function(finger)
+        {
+            return new Finger(finger)
+        });
+        self.fingers(mappedFingers);
+      });
+
+      self.save = function()
+      {
+        $.ajax("/users/<%= @user.id %>/fingers",
+        {
+            data: ko.toJSON({ fingers: self.fingers }),
+            type: "post", contentType: "application/json",
+            success: function(result) { console.log(result)},
+            failure: function(result) { console.log(failure)}
+        });
+      };
+  }
+
+  var ufvm = new UserFingersViewModel();
+  ko.applyBindings(ufvm);
+</script>
