@@ -1,8 +1,7 @@
 class FingersController < ApplicationController
-  before_filter :authenticate_user!
+  before_filter :authenticate_user!, :only => [ :update ]
   before_filter :load_user, :only => [ :index, :show ]
 
-  #TODO-will this actually get invoked?
   def index
     @fingers = @user.fingers.all
     respond_to do |format|
